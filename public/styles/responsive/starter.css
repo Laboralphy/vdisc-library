@@ -34,8 +34,9 @@ h1, h2, h3, h4, h5, p {
 }
 
 /* navigation bar for buttons */
-nav ul {
+nav, nav ul, nav ul li {
 	padding: 0;
+	margin: 0;
 }
 
 /* list items in navigation bar are on the same line */

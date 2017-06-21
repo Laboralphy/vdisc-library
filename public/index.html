@@ -9,12 +9,11 @@
 	<link rel="stylesheet" type="text/css" href="styles/responsive/colors.css"/>
 	<link rel="stylesheet" type="text/css" href="styles/icomoon/icomoon.css"/>
 	<link rel="stylesheet" type="text/css" href="styles/main.css"/>
-	<!--[if lt IE 9]>
-	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-
 	<!-- SCRIPTS  -->
-	<script src="https://unpkg.com/vue"></script>
+	<script src="https://unpkg.com/vue" type="text/javascript"></script>
+	<!-- unpack joue les escargots
+	<script src="scripts/externals/vue.js" type="application/javascript"></script>
+	-->
 	<script src="scripts/dist/app.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 </head>
@@ -22,12 +21,10 @@
 	<div id="application">
 		<section class="card">
 			<div class="row">
-				<div class="col lg-12">
+				<div class="col lg-4 md-6 sm-12">
 					<title-bar ref="mainTitle" def-color="red" def-caption="Titre de la fenêtre"></title-bar>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col lg-12">
+				<div class="col lg-8 md-6 sm-12">
 					<menu-bar ref="mainMenu" v-bind:def-items="[{caption: 'Home', icon: 'home'}, 'Back', 'Help']"></menu-bar>
 				</div>
 			</div>
