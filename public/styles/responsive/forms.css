@@ -1,0 +1,46 @@
+form input, form select {
+    width: 100%;
+    height: 2.1em;
+}
+
+form textarea {
+    width: 100%;
+}
+
+form select[size] {
+    height: initial;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input[type="radio"] + label,
+form input[type="checkbox"] + label {
+    font-weight: normal;
+}
+
+form input[type="radio"], form input[type="checkbox"] {
+    width: initial;
+    height: initial;
+    transform: scale(1.3);
+    vertical-align: middle;
+}
+
+form fieldset legend {
+    font-weight: bold;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+form label.error {
+    color: rgb(192, 0, 0);
+}
+
+form label.error.invalid:after {
+    content: " (invalid)";
+}
+
+form label.error.required:after {
+    content: " (required)";
+}

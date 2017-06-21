@@ -1,0 +1,20 @@
+{
+  "name": "anime-lib",
+  "version": "1.0.0",
+  "description": "The Anime Library Server provides navigation, search engine, and media player to access my personal video archive.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Raphaël Marandet",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "express-session": "^1.15.3",
+    "session-file-store": "^1.0.0"
+  },
+  "devDependencies": {
+    "webpack": "^2.6.1"
+  }
+}
