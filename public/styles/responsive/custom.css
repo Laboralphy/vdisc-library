@@ -1,16 +1,28 @@
-.card {
+/*
+Sections contain several rows, use this structure
+<section class="card">
+	<div class="row">
+		....
+	</div>
+	<div class="row">
+		....
+	</div>
+</section>
+ */
+section.card {
 	margin-bottom: 1em;
-	padding: 0.5em 1em;
+	padding: 0.5em;
 	border: thin solid;
 	border-radius: 0.2em;
-}
-
-main.card {
 	margin-left: 1em;
 	margin-right: 1em;
 }
 
+/*
+Use title with h1..h5
+ */
 .title {
+	margin-bottom: 0;
 	padding-left: 0.5em;
 	margin-left: -0.5em;
 	margin-right: -0.5em;

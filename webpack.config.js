@@ -10,5 +10,13 @@ module.exports = {
         filename: 'app.js',
         publicPath: "/public/scripts/dist/",
     },
+	module: {
+		loaders: [
+			{
+				test: /\.vue$/,
+				loader: 'vue-loader'
+			}
+		]
+	},
     target: 'web'
 };

@@ -20,7 +20,7 @@
 </head>
 <body>
 	<div id="application">
-		<main class="card">
+		<section class="card">
 			<div class="row">
 				<div class="col lg-12">
 					<title-bar ref="mainTitle" def-color="red" def-caption="Titre de la fenêtre"></title-bar>
@@ -28,10 +28,33 @@
 			</div>
 			<div class="row">
 				<div class="col lg-12">
-					<menu-bar ref="mainMenu" def-items="Home|Back|Help"></menu-bar>
+					<menu-bar ref="mainMenu" v-bind:def-items="[{caption: 'Home', icon: 'home'}, 'Back', 'Help']"></menu-bar>
 				</div>
 			</div>
-		</main>
+		</section>
+		<section class="card">
+			<div class="row">
+				<div class="col lg-12">
+					<thumbnail-list ref="videoBrowser"></thumbnail-list>
+				</div>
+			</div>
+		</section>
+<!--		<section class="card">
+			<div class="row">
+				<div class="col lg-12">
+					<nav>
+						<ul>
+							<li>
+								<thumbnail-item def-source="images/covers/p0.jpg" def-caption="toto"></thumbnail-item>
+							</li>
+							<li>
+								<thumbnail-item def-source="images/covers/p1.jpg" def-caption="toto1"></thumbnail-item>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</section>-->
 	</div>
 </body>
 </html>
