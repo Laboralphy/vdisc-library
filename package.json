@@ -4,7 +4,7 @@
   "description": "The Anime Library Server provides navigation, search engine, and media player to access my personal video archive.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node index.js"
   },
   "author": "Raphaël Marandet",
@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "css-loader": "^0.28.4",
+    "mocha": "^3.4.2",
     "style-loader": "^0.18.2",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^12.2.1",

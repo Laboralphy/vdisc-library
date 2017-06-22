@@ -36,6 +36,6 @@
 
     figure:hover {
         transition: filter 0.5s;
-        filter: brightness(125%);
+        filter: brightness(115%);
     }
 </style>
