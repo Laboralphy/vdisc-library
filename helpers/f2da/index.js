@@ -5,103 +5,92 @@
 /**
  * Reads 2DA files
  */
-
+const isNumber = require('is-number');
 
 class F2DA {
 
-	parseFieldList(sLine) {
-		let aRegs = sLine.match(/[^\s"']+|"([^"]*)"|'([^']*)'/g);
-		let n;
-		for (let i = 0; i < aRegs.length; i++) {
-			let sField = aRegs[i];
-			if (sField.startsWith('"')) {
-				n = sField.lastIndexOf('"');
-				aRegs[i] = sField.slice(1,n);
-			}
-		}
-		this._fields = aRegs;
-		return aRegs;
-	}
-
-
 	/**
-	 * Parses a data line
-	 * @param sLine
-	 * @returns {Array|{index: number, input: string}|*|Boolean}
+	 * Parses a string and separates values.
+	 * returns an array
+	 * @param sLine {string} source string
+	 * @returns {*|Array|{index: number, input: string}|Boolean}
 	 */
-	parseDataLine(sLine) {
-		let aRegs = sLine.match(/[^\s"']+|"([^"]*)"|'([^']*)'/g);
-		let n;
-		let nRow = aRegs.shift();
-		for (let i = 0; i < aRegs.length; i++) {
-			let sField = aRegs[i];
+	parseSSV(sLine) {
+		return sLine
+			.trim()
+			.match(/[^\s"']+|"([^"]*)"|'([^']*)'/g)
+			.map(function(sField) {
 			if (sField === "****") {
-				aRegs[i] = null;
+				return null;
 			} else if (sField.startsWith('"')) {
-				n = sField.lastIndexOf('"');
-				aRegs[i] = sField.slice(1,n);
+				return sField.slice(1, sField.lastIndexOf('"'));
+			} else if (isNumber(sField)) {
+				return Number(sField);
 			} else {
-				n = Number(sField);
-				if (!isNaN(n)) {
-					aRegs[i] = n;
-				}
+				return sField;
 			}
-		}
-		if (nRow.match(/^[0-9]+$/)) {
-			if (this._data === undefined) {
-				this._data = [];
-			}
-			this._data[nRow | 0] = aRegs;
-		}
-		return aRegs;
+		});
 	}
 
 	parseVersion(sLine) {
-		let aReg = sLine.match(/^2DA V(.*)$/);
-		if (aReg) {
-			this._version = aReg[1];
-			return this._version;
+		let aRegs = sLine.match(/^2DA V(.+)$/);
+		if (aRegs) {
+			return aRegs[1];
 		} else {
-			return null;
+			throw new Error('version number could not be parsed. line 1 should be like "2DA V..."');
 		}
 	}
 
-	getState() {
-		if (!this._version) {
-			return 'version';
-		} else if (!this._fields) {
-			return 'fieldlist';
+	parseDefault(sLine) {
+		sLine = sLine.trim();
+		if (sLine !== '') {
+			let aRegs = sLine.match(/^default:(.*)$/i);
+			if (aRegs) {
+				return aRegs[1].trim();
+			} else {
+				throw new Error('default value could not be parsed? line 2 should be empty or like "default: ...."');
+			}
 		} else {
-			return 'data';
+			return '';
 		}
 	}
 
-	parseLine(sLine) {
-		if (!this._version) {
-			this.parseVersion(sLine);
-		} else if (!this._fields) {
-			this.parseFieldList(sLine);
-		} else {
-			this.parseDataLine(sLine);
-		}
-	}
-
-	parse(sData) {
-		sData
-			.split('\n')
-			.map(sLine => sLine.trim())
-			.filter(sLine => !!sLine)
-			.forEach(sLine => this.parseLine(sLine));
-		let fields = this._fields;
-		this._json = this._data.map(function(d) {
-			let o = {};
-			fields.forEach(function(f, i) {
-				o[f] = d[i];
-			});
-			return o;
+	checkColCount(aFields, aData) {
+		let n = aFields.length;
+		aData.forEach(function(d, i) {
+			if (!((d.length === n) || (d.length === (n + 1) && d[0] == i))) {
+				throw new Error('bad column count at row #' + i);
+			}
 		});
 	}
-}
 
+	buildTable(aFields, aData) {
+		let n = aFields.length;
+		return aData.map(function(d, i) {
+			let row = {};
+			if (d.length === n) {
+				d.forEach(function(c, x) {
+					row[aFields[x]] = c;
+				});
+			} else if (d.length === (n + 1) && d[0] == i) {
+				d.slice(1).forEach(function(c, x) {
+					row[aFields[x]] = c;
+				});
+			} else {
+				throw new Error('bad column count at row #' + i + '. row items count: ' + d.length + ' - fields count: ' + n + ' - row content: [' + d.join(', ') + ']');
+			}
+			return row;
+		});
+	}
+
+	parse(sSource) {
+		let aSource = sSource.split('\n');
+		let sVersion = this.parseVersion(aSource.shift());
+		let sDefault = aSource.shift();
+		let aFields = this.parseSSV(aSource.shift());
+		let aData = aSource.filter(sLine => sLine.trim().length > 0).map(this.parseSSV);
+		return this.buildTable(aFields, aData);
+	}
+}
 
 module.exports = F2DA;

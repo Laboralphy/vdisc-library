@@ -12,160 +12,202 @@ describe('F2DA', function() {
 		});
 	});
 
-	describe('#parseDataLine()', function() {
-		it('should parse a simplest line', function() {
+	describe('#parseSSV()', function() {
+		it('should parse a simplest line', function () {
 			let f = new F2DA();
-			let r = f.parseDataLine('0 abc');
-			assert.ok(Array.isArray(r));
-			assert.equal(1, r.length);
-			assert.equal('abc', r[0]);
-		});
-
-		it('should parse a difficulty-class 2 line', function() {
-			let f = new F2DA();
-			let r = f.parseDataLine('0 abc "xyz"');
+			let r = f.parseSSV('0 abc');
 			assert.ok(Array.isArray(r));
 			assert.equal(2, r.length);
-			assert.equal('abc', r[0]);
-			assert.equal('xyz', r[1]);
+			assert.equal('abc', r[1]);
+			assert.equal(0, r[0]);
 		});
 
-		it('should parse a difficulty-class 3 line', function() {
+		it('should parse a line with quotes', function () {
 			let f = new F2DA();
-			let r = f.parseDataLine('0 abc "xyz" 456');
+			let r = f.parseSSV('0 abc "raph marr" "4 5 6" abcdef 1.3');
 			assert.ok(Array.isArray(r));
-			assert.equal(3, r.length);
-			assert.equal('abc', r[0]);
-			assert.equal('xyz', r[1]);
-			assert.equal(456, r[2]);
+			assert.equal(6, r.length);
+			assert.deepEqual(['0',  'abc', 'raph marr', '4 5 6', 'abcdef', '1.3'], r);
 		});
 
-		it('should parse a line with lots of items and spaces', function() {
+		it('should parse a line with quotes and **** value', function () {
 			let f = new F2DA();
-			let r = f.parseDataLine('0			shiva		ifrit 		bahamut ixion ramuh "les sœurs magus" 120');
+			let r = f.parseSSV('0 **** abc "raph marr" "4 5 6" **** **** abcdef 1.3');
 			assert.ok(Array.isArray(r));
-			assert.equal(7, r.length);
-			assert.equal('shiva', r[0]);
-			assert.equal('ifrit', r[1]);
-			assert.equal('bahamut', r[2]);
-			assert.equal('ixion', r[3]);
-			assert.equal('ramuh', r[4]);
-			assert.equal('les sœurs magus', r[5]);
-		});
-
-		it('should parse a line with null values', function() {
-			let f = new F2DA();
-			let r = f.parseDataLine('0			shiva		**** 		bahamut ixion **** "les sœurs magus" 120');
-			assert.ok(Array.isArray(r));
-			assert.equal(7, r.length);
-			assert.equal('shiva', r[0]);
-			assert.strictEqual(null, r[1]);
-			assert.equal('bahamut', r[2]);
-			assert.equal('ixion', r[3]);
-			assert.strictEqual(null, r[4]);
-			assert.equal('les sœurs magus', r[5]);
-			assert.equal(120, r[6]);
-		});
-
-		it ('should produce an array with 2 entries', function() {
-			let f = new F2DA();
-			f.parseDataLine('0			shiva		ifrit 		bahamut ixion ramuh "les sœurs magus" 120');
-			f.parseDataLine('1		karbunkle		atomos 		titan alexandre ondine leviathan 1');
-			assert.equal(2, f._data.length);
-			assert.equal(7, f._data[0].length);
-			assert.equal(7, f._data[1].length);
-			assert.equal('karbunkle', f._data[1][0]);
+			assert.equal(9, r.length);
+			assert.deepEqual(['0', null, 'abc', 'raph marr', '4 5 6', null, null, 'abcdef', '1.3'], r);
 		});
 	});
 
-	describe('#parseFieldList()', function() {
-		it ('should parse 3 fields, bobo, bibi, bubu', function() {
+	describe('#parseDefault()', function() {
+		it ('should return empty string', function() {
 			let f = new F2DA();
-			let a = f.parseFieldList('   bobo    bibi  		bubu');
-			assert.ok(Array.isArray(a));
-			assert.equal(3, a.length);
-			assert.equal('bobo', a[0]);
-			assert.equal('bibi', a[1]);
-			assert.equal('bubu', a[2]);
+			assert.strictEqual('', f.parseDefault(''));
+		});
+		it ('should return default value', function() {
+			let f = new F2DA();
+			assert.strictEqual('toto', f.parseDefault('default: toto'));
+		});
+		it ('should throw an error', function() {
+			let f = new F2DA();
+			assert.throws(function() {
+				f.parseDefault('xxx');
+			});
 		});
 	});
 
 	describe('#parseVersion()', function() {
-		it ('should parse version', function() {
+		it ('should return a version number', function() {
 			let f = new F2DA();
-			f.parseVersion('2DA V2.0');
-			assert.equal('2.0', f._version);
+			assert.strictEqual('2.0', f.parseVersion('2DA V2.0'));
+		});
+		it ('should throw an error', function() {
+			let f = new F2DA();
+			assert.throws(function() {
+				f.parseVersion('2DAxxxxx');
+			});
 		});
 	});
 
-
-	describe('#getState()', function() {
-		it('should return accurate state', function () {
+	describe('#checkColCount()', function() {
+		it ('should work', function() {
 			let f = new F2DA();
-			assert.equal('version', f.getState());
-			f._version = '2.0';
-			assert.equal('fieldlist', f.getState());
-			f._fields = ['a', 'b', 'c'];
-			assert.equal('data', f.getState());
+			assert.doesNotThrow(function() {
+				f.checkColCount(['abc', 'def', 'ghi'], [
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi'],
+					['yui', 'xvc', 'poi']
+				]);
+			});
+		});
+		it ('should work with initial numeric column', function() {
+			let f = new F2DA();
+			assert.doesNotThrow(function() {
+				f.checkColCount(['abc', 'def', 'ghi'], [
+					[0, 'yui', 'xvc', 'poi'],
+					[1, 'yui', 'xvc', 'poi'],
+					[2, 'yui', 'xvc', 'poi'],
+					[3, 'yui', 'xvc', 'poi'],
+					[4, 'yui', 'xvc', 'poi'],
+					[5, 'yui', 'xvc', 'poi'],
+					[6, 'yui', 'xvc', 'poi'],
+					[7, 'yui', 'xvc', 'poi'],
+					[8, 'yui', 'xvc', 'poi'],
+					[9, 'yui', 'xvc', 'poi']
+				]);
+			});
+		});
+		it ('should not work because initial numeric column is incoherent', function() {
+			let f = new F2DA();
+			assert.throws(function() {
+				f.checkColCount(['abc', 'def', 'ghi'], [
+					[0, 'yui', 'xvc', 'poi'],
+					[1, 'yui', 'xvc', 'poi'],
+					[2, 'yui', 'xvc', 'poi'],
+					[7, 'yui', 'xvc', 'poi'],
+					[4, 'yui', 'xvc', 'poi'],
+					[5, 'yui', 'xvc', 'poi'],
+					[6, 'yui', 'xvc', 'poi'],
+					[7, 'yui', 'xvc', 'poi'],
+					[8, 'yui', 'xvc', 'poi'],
+					[9, 'yui', 'xvc', 'poi']
+				]);
+			});
 		});
 	});
 
-	describe('#parseLine()', function() {
-		it('should return accurate state', function () {
+	describe('#buildTable()', function() {
+		it('should build a simple table', function() {
 			let f = new F2DA();
-			assert.equal('version', f.getState());
-			f.parseLine('2DA V2.0');
-			assert.equal('2.0', f._version);
-			assert.equal('fieldlist', f.getState());
-			f.parseLine(' a b c');
-			assert.deepEqual(['a', 'b', 'c'], f._fields);
-			assert.equal('data', f.getState());
+			let aTable = f.buildTable(['name', 'age', 'class', 'rank'], [
+				['puri puri prisoner', 33, 's', 17],
+				['genos', 19, 's', 14],
+				['watch dog man', '****', 's', 12],
+				['king', 29, 's', 6],
+				['metal knight', '****', 's', 7],
+				['silver fang', 81, 's', 3],
+				['tatsumaki', 28, 's', 2]
+			]);
+			assert.deepEqual({
+				name: 'puri puri prisoner',
+				age: 33,
+				'class': 's',
+				rank: 17
+			}, aTable[0]);
+			assert.deepEqual({
+				name: 'tatsumaki',
+				age: 28,
+				'class': 's',
+				rank: 2
+			}, aTable[6]);
 		});
 	});
 
-	describe('#parse()', function() {
-		it('should parse', function() {
-			let sSource = `2DA V2.0
-
-
-	name		type		pow
-	-----		-----		-----
-
-0	ifrit		fire		100
-1	ramuh		electricity 120
-2	shiva		ice			80
-3	bahamut		neutre		150
-`;
+	describe('#parseSource()', function() {
+		it ('should parse a simple table with numeric indices', function() {
 			let f = new F2DA();
-			f.parse(sSource);
-			assert.equal('2.0', f._version);
-			assert.deepEqual(['name', 'type', 'pow'], f._fields);
-			assert.deepEqual(['ifrit', 'fire', 100], f._data[0]);
-			assert.deepEqual(['ramuh', 'electricity', 120], f._data[1]);
-			assert.deepEqual(['shiva', 'ice', 80], f._data[2]);
-			assert.deepEqual(['bahamut', 'neutre', 150], f._data[3]);
+			let aTable = f.parse(
+`2DA V2.0
+
+	name					age		class	rank
+0	"puri puri prisoner"	33		s		17
+1	genos					19		s		14
+2	"watch dog man"			****	s		12
+3	king					29		s		6
+4	"metal knight"			****	s		7
+5	"silver fang"			81		s		3
+6	tatsumaki				28		s		2
+7	blast					****	s		1
+`);
+			assert.deepEqual({
+				name: 'puri puri prisoner',
+				age: 33,
+				'class': 's',
+				rank: 17
+			}, aTable[0]);
+			assert.deepEqual({
+				name: 'tatsumaki',
+				age: 28,
+				'class': 's',
+				rank: 2
+			}, aTable[6]);
+		});
+		it ('should parse a simple table without numeric indices', function() {
+			let f = new F2DA();
+			let aTable = f.parse(
+`2DA V2.0
+
+name					age		class	rank
+"puri puri prisoner"	33		s		17
+genos					19		s		14
+"watch dog man"			****	s		12
+king					29		s		6
+"metal knight"			****	s		7
+"silver fang"			81		s		3
+tatsumaki				28		s		2
+blast					****	s		1
+`);
+			assert.deepEqual({
+				name: 'genos',
+				age: 19,
+				'class': 's',
+				rank: 14
+			}, aTable[1]);
+			assert.deepEqual({
+				name: 'tatsumaki',
+				age: 28,
+				'class': 's',
+				rank: 2
+			}, aTable[6]);
 		});
 	});
-
-	describe('#parse() 2', function() {
-		it('should parse a real file and build a json', function() {
-			let sSource = `2DA V2.0
-
-	file										type			quality		audio		subtitles		n
-	-----------------------------------------	--------------	----------	----------	-------------	-----
-0	d1/paranoia-agent.d1.t1.vfr.qh.webm			episode			h			fr			****			1
-1	d1/paranoia-agent.d1.t2.vfr.qh.webm			episode			h			fr			****			2
-2	d1/paranoia-agent.d1.t3.vfr.qh.webm			episode			h			fr			****			3
-3	d1/paranoia-agent.d1.t4.vfr.qh.webm			episode			h			fr			****			4`;
-			let f = new F2DA();
-			f.parse(sSource);
-			assert.deepEqual({file: 'd1/paranoia-agent.d1.t1.vfr.qh.webm', type: 'episode', quality: 'h', audio: 'fr', subtitles: null, n: 1}, f._json[0]);
-			assert.deepEqual({file: 'd1/paranoia-agent.d1.t2.vfr.qh.webm', type: 'episode', quality: 'h', audio: 'fr', subtitles: null, n: 2}, f._json[1]);
-			assert.deepEqual({file: 'd1/paranoia-agent.d1.t3.vfr.qh.webm', type: 'episode', quality: 'h', audio: 'fr', subtitles: null, n: 3}, f._json[2]);
-			assert.deepEqual({file: 'd1/paranoia-agent.d1.t4.vfr.qh.webm', type: 'episode', quality: 'h', audio: 'fr', subtitles: null, n: 4}, f._json[3]);
-		});
-	})
-
 });
 
 

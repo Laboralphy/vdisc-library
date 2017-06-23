@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.15.3",
     "express-session": "^1.15.3",
+    "is-number": "^3.0.0",
     "session-file-store": "^1.0.0"
   },
   "devDependencies": {
