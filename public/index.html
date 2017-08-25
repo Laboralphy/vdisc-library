@@ -1,57 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8"/>
-	<title>TITLE</title>
-	<link rel="stylesheet" type="text/css" href="styles/responsive/normalize.css"/>
-	<link rel="stylesheet" type="text/css" href="styles/responsive/starter.css"/>
-	<link rel="stylesheet" type="text/css" href="styles/responsive/custom.css"/>
-	<link rel="stylesheet" type="text/css" href="styles/responsive/colors.css"/>
-	<link rel="stylesheet" type="text/css" href="styles/icomoon/icomoon.css"/>
-	<link rel="stylesheet" type="text/css" href="styles/main.css"/>
-	<!-- SCRIPTS  -->
-	<script src="https://unpkg.com/vue" type="text/javascript"></script>
-	<!-- unpack joue les escargots
-	<script src="scripts/externals/vue.js" type="application/javascript"></script>
-	-->
-	<script src="scripts/dist/app.js"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-</head>
-<body>
-	<div id="application">
-		<section class="card">
-			<div class="row">
-				<div class="col lg-4 md-6 sm-12">
-					<title-bar ref="mainTitle" def-color="red" def-caption="Titre de la fenêtre"></title-bar>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>TITLE</title>
+		<link rel="stylesheet" type="text/css" href="styles/responsive/normalize.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/responsive/starter.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/responsive/custom.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/responsive/colors.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/responsive/forms.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/mdi/css/materialdesignicons.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/main.css"/>
+		<!-- SCRIPTS  CDN -->
+		<script src="https://unpkg.com/vue" type="text/javascript"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js" type="text/javascript"></script>
+
+		<!-- APPLICATION -->
+		<script src="scripts/dist/app.js"></script>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+	</head>
+	<body>
+		<div id="application">
+			<vue-card>
+				<div class="row">
+					<div class="col lg-4 md-6 sm-12">
+						<vue-title ref="mainTitle" def-color="red" def-caption="Titre de la fenêtre"></vue-title>
+					</div>
+					<div class="col lg-8 md-6 sm-12">
+						<vue-links ref="mainMenu" :def-items="[{id:'mm-home', caption: 'Home', icon: 'home'}, {id: 'mm-back', caption:'Back'}, 'Help']"></vue-links>
+					</div>
 				</div>
-				<div class="col lg-8 md-6 sm-12">
-					<menu-bar ref="mainMenu" v-bind:def-items="[{caption: 'Home', icon: 'home'}, 'Back', 'Help']"></menu-bar>
+				<div class="row">
+					<div class="col lg-12">
+						<vue-form-search ref="searchForm"></vue-form-search>
+					</div>
 				</div>
-			</div>
-		</section>
-		<section class="card">
-			<div class="row">
-				<div class="col lg-12">
-					<thumbnail-list ref="videoBrowser"></thumbnail-list>
+			</vue-card>
+			<vue-card>
+				<div class="row">
+					<div class="col lg-12">
+						<vue-thumbnail-list def-title="Résultats pour :" ref="videoBrowser"></vue-thumbnail-list>
+					</div>
 				</div>
-			</div>
-		</section>
-<!--		<section class="card">
-			<div class="row">
-				<div class="col lg-12">
-					<nav>
-						<ul>
-							<li>
-								<thumbnail-item def-source="images/covers/p0.jpg" def-caption="toto"></thumbnail-item>
-							</li>
-							<li>
-								<thumbnail-item def-source="images/covers/p1.jpg" def-caption="toto1"></thumbnail-item>
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</section>-->
-	</div>
-</body>
+			</vue-card>
+		</div>
+	</body>
 </html>

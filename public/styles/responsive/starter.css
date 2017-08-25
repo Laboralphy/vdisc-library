@@ -1,5 +1,10 @@
 /* STARTER CSS FOR MOBILE FIRST DOCUMENTS */
 
+/* This style sheet is aimed at introducing some structural directive
+ * to make a page responsive.
+ * the styles here are limited to metrics like padding, margin, size, alignement...
+ */
+ 
 /* DEBUG */
 /*
 * {
@@ -8,33 +13,45 @@
 }
 */
 
+
+/*
+######
+#     #  ######  ######    ##    #    #  #        #####   ####
+#     #  #       #        #  #   #    #  #          #    #
+#     #  #####   #####   #    #  #    #  #          #     ####
+#     #  #       #       ######  #    #  #          #         #
+#     #  #       #       #    #  #    #  #          #    #    #
+######   ######  #       #    #   ####   ######     #     ####
+*/
+
+
+/* DEFAULT Configuration for standard éléments */
+
 * {
 	padding-top: 0.25em;
 	padding-bottom: 0.25em;
 	box-sizing: border-box;
 }
 
-/* html and body are 100% height by default
-font size is 18px
-*/
+/* 
+ * html and body are 100% height by default
+ * font size is 18px
+ */
 html, body {
 	height: 100%;
 	font-size: 18px;
 }
 
-/* default style for images : use all available space, vertically aligned on the middle */
-img {
-	vertical-align: middle;
-	width: 100%;
-}
 
-/* remove margin top for paragraph and headings */
-h1, h2, h3, h4, h5, p {
-	margin-top: 0;
-}
+
+
+
+/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/
+/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/
+/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/
 
 /* navigation bar for buttons */
-nav, nav ul, nav ul li {
+nav, nav ul, nav li {
 	padding: 0;
 	margin: 0;
 }
@@ -44,6 +61,19 @@ nav li {
 	list-style-type: none;
 	display: inline-block;
 }
+
+/* navigation block for larger menu with long item names */
+nav.block li {
+	list-style-type: none;
+	display: block;
+}
+
+
+
+
+/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/
+/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/
+/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/
 
 /* buttons and a.btn share the same styles */
 button, a.btn {
@@ -55,6 +85,7 @@ button, a.btn {
 	margin-right: 0.2em;
 }
 
+/* butons are reshaped */
 button {
 	border: none;
 	cursor: pointer;
@@ -62,6 +93,18 @@ button {
 
 button:hover, a.btn:hover {
 	transition: all 0.5s;
+}
+
+
+
+/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/
+/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/
+/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/
+
+/* default style for images : use all available space, vertically aligned on the middle */
+img {
+	vertical-align: middle;
+	width: 100%;
 }
 
 figure {
@@ -73,6 +116,13 @@ figure figcaption {
 	font-size: 0.85em;
 }
 
+
+
+
+/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/
+/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/
+/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/
+
 dt {
 	font-size: 1.1em;
 	font-weight: bold;
@@ -82,6 +132,11 @@ dt + dd + dt {
 	margin-top: 2em;
 }
 
+/* remove margin top for paragraph and headings */
+h1, h2, h3, h4, h5, p {
+	margin-top: 0;
+}
+
 hr {
 	height: 0;
 	padding: 0;
@@ -89,7 +144,35 @@ hr {
 	border-top: solid thin rgba(0, 0, 0, 0.5);
 }
 
-/* wrapper style taks 100% width */
+
+
+
+
+
+
+
+
+/*
+#     #
+#     #  ######  #       #####   ######  #####    ####
+#     #  #       #       #    #  #       #    #  #
+#######  #####   #       #    #  #####   #    #   ####
+#     #  #       #       #####   #       #####        #
+#     #  #       #       #       #       #   #   #    #
+#     #  ######  ######  #       ######  #    #   ####
+*/
+
+/* default smaller font helper */
+.font-smaller {
+	font-size: 0.75em;
+}
+
+/* default bigger font helper */
+.font-bigger {
+	font-size: 1.25em;
+}
+
+/* wrapper is an alias to 100% wide */
 .wrapper {
 	width: 100%;
 }
@@ -100,6 +183,13 @@ hr {
 	margin: auto;
 }
 
+
+
+/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/
+/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/
+/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/
+
+/* containers, wrappers and row act like a table */
 .container:before, .wrapper:before, .row:before,
 .container:after, .wrapper:after, .row:after {
 	content: "";
@@ -108,12 +198,24 @@ hr {
 }
 
 
-/*--------------*/
-/* GRID SCREENS */
-/*--------------*/
+
+
+
+
+
+
+/*
+######
+#     #  ######   ####   #####    ####   #    #   ####      #    #    #  ######
+#     #  #       #       #    #  #    #  ##   #  #          #    #    #  #
+######   #####    ####   #    #  #    #  # #  #   ####      #    #    #  #####
+#   #    #            #  #####   #    #  #  # #       #     #    #    #  #
+#    #   #       #    #  #       #    #  #   ##  #    #     #     #  #   #
+#     #  ######   ####   #        ####   #    #   ####      #      ##    ######
+*/
 
 /* 
- * col-lg : large
+ * col-lg : large		above 1366px
  * col-md : medium		max 1366px
  * col-sm : small		max 750px
  * col-xs : extra small max 640px

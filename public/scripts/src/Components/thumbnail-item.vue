@@ -1,24 +1,29 @@
 <template>
-    <figure class="thumbnail">
+    <figure v-on:click="clickHandler" class="thumbnail">
         <img v-bind:src="source" />
         <figcaption>{{ caption }}</figcaption>
     </figure>
 </template>
 <script>
     export default {
-    	props: ['defCaption', 'defSource'],
+    	props: ['defCaption', 'defSource', 'defId'],
         data: function() {
     		return {
+    			id: this.defId,
     			source: this.defSource,
                 caption: this.defCaption
             };
+        },
+        methods: {
+    		clickHandler: function() {
+				this.$emit('item-select', {id: this.id});
+            }
         }
     }
 </script>
 <style scoped="scoped">
     figure.thumbnail img {
-        height: 10em;
-        width: initial;
+        width: 10em;
     }
 
     figure.thumbnail figcaption {
@@ -26,9 +31,9 @@
     }
 
     figure.thumbnail {
-        margin: 0 0.1em;
+        margin: 0.15em 0.15em;
         text-align: center;
-        width: 10em;
+        width: 12em;
         border: solid thin rgba(0, 0, 0, 0.4);
         box-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.25);
         background-color: #c0c0c0;

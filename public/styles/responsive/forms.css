@@ -1,25 +1,38 @@
-form input, form select {
+/**
+ * Default style for form elements
+ */
+
+
+/* default style and colors */
+form input, form select, form textarea {
+    border-radius: 0.25em;
+    border: solid thin rgba(0, 0, 0, 0.25);
+    background-color: #DDD;
     width: 100%;
+}
+
+/* by default, all element are 100% wide and 2.1em high */
+form input, form select {
     height: 2.1em;
 }
 
-form textarea {
-    width: 100%;
-}
-
+/* select elements retreive their initial size */
 form select[size] {
     height: initial;
 }
 
+/* label are bold... */
 form label {
     font-weight: bold;
 }
 
+/* ... except checkbox and radio button labels */
 form input[type="radio"] + label,
 form input[type="checkbox"] + label {
     font-weight: normal;
 }
 
+/* checkbox and radio button are slightly bigger than normal */
 form input[type="radio"], form input[type="checkbox"] {
     width: initial;
     height: initial;
@@ -27,12 +40,14 @@ form input[type="radio"], form input[type="checkbox"] {
     vertical-align: middle;
 }
 
+/* form filedset are bold */
 form fieldset legend {
     font-weight: bold;
     padding-left: 0.5em;
     padding-right: 0.5em;
 }
 
+/* color of label error */
 form label.error {
     color: rgb(192, 0, 0);
 }
