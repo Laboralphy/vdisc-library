@@ -1,6 +1,7 @@
 /**
  * Created by ralphy on 25/08/17.
  */
+const display = require('../helpers/display');
 const path = require('path');
 const CONFIG = require('../config');
 const cfl = require('../helpers/cursed-file-list');
@@ -24,7 +25,9 @@ async function indexVidFiles() {
 		.filter((value, index, self) => self.indexOf(value) === index);
 }
 
-indexVidFiles();
+indexVidFiles().then(function() {
+	display.print(VIDFILES_LIST.length + ' files have been indexed.');
+});
 
 
 /**

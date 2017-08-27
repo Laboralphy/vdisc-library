@@ -47,6 +47,7 @@
             },
 
 			goSuggest: function() {
+			    console.log('suggest', this.search);
 				if (this.search.length >= this.minChars) {
 					if (this.onSuggest) {
 						this.onSuggest(this.search);

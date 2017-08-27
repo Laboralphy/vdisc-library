@@ -1086,6 +1086,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "title"
   }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('nav', [_c('ul', [_vm._l((_vm.items), function(item) {
     return _c('li', [_c('vue-thumbnail-item', {
+      key: item.id,
       attrs: {
         "def-caption": item.caption,
         "def-source": item.source,

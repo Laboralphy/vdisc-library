@@ -4,7 +4,7 @@
         <nav>
             <ul>
                 <li v-for="item in items">
-                    <vue-thumbnail-item v-on:item-select="selectHandler(item)" :def-caption="item.caption" :def-source="item.source" :def-id="item.id"></vue-thumbnail-item>
+                    <vue-thumbnail-item :key="item.id" v-on:item-select="selectHandler(item)" :def-caption="item.caption" :def-source="item.source" :def-id="item.id"></vue-thumbnail-item>
                 </li>
                 <p class="no-item" v-if="items.length == 0"><vue-icon def-icon="magnify"></vue-icon> Pas d'élément.</p>
             </ul>
