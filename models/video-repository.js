@@ -2,52 +2,101 @@
  * Created by ralphy on 25/08/17.
  */
 const display = require('../helpers/display');
+const fs = require('fs');
 const path = require('path');
 const CONFIG = require('../config');
 const cfl = require('../helpers/cursed-file-list');
 const VIDFILES_PATH = path.join(__dirname, '../', CONFIG.paths.videos);
+const INDEX_FILENAME = 'index.json';
+
 let VIDFILES_LIST = null;
 let AUTOCOMP_LIST = null;
 let VIDFILES_INDEX = null;
+let VIDFOLDER_DATA = null;
 
 
 
 async function indexVidFiles() {
-	VIDFILES_INDEX = {};
-	VIDFILES_LIST = await cfl.search(VIDFILES_PATH);
+	let aFileIndex = {};
+	let aFileList = await cfl.search(VIDFILES_PATH);
 	// complete with identifier
-	VIDFILES_LIST.forEach(function(v, i) {
+	aFileList.forEach(function(v, i) {
 		v.id = (i + 1).toString(36);
-		VIDFILES_INDEX[v.id] = v;
+		aFileIndex[v.id] = v;
 	});
-	AUTOCOMP_LIST = VIDFILES_LIST
+	let aAutoCompList = aFileList
 		.map(v => v.file.split('.').shift().replace(/[^0-9a-z]+/gi, '-'))
 		.filter((value, index, self) => self.indexOf(value) === index);
+	VIDFILES_LIST = aFileList;
+	VIDFILES_INDEX = aFileIndex;
+	AUTOCOMP_LIST = aAutoCompList;
+}
+
+async function loadFolderData(sPath) {
+	return new Promise(function(resolve) {
+		let id = 0;
+		let sFile = path.join(VIDFILES_PATH, sPath, INDEX_FILENAME);
+		fs.stat(sFile, function(err, stat) {
+			if (stat) {
+				fs.readFile(sFile, 'utf8', function(err, data) {
+					if (err) {
+						throw err;
+					} else {
+						resolve(JSON.parse(data));
+					}
+				});
+			} else {
+				resolve({});
+			}
+		});
+	});
+}
+
+async function indexFolderData() {
+	let aFolderList = await cfl.directoryList(VIDFILES_PATH);
+	let oData = {};
+	for (let i = 0, l = aFolderList.length; i < l; ++i) {
+		let f = aFolderList[i];
+		let d = await loadFolderData(f);
+		if (!('name' in d)) {
+			d.name = f;
+		}
+		d.id = (i + 1).toString(36);
+		oData[f] = d;
+	}
+	VIDFOLDER_DATA = oData;
 }
 
 indexVidFiles().then(function() {
+	display.print(AUTOCOMP_LIST.length + ' folders have been indexed.');
 	display.print(VIDFILES_LIST.length + ' files have been indexed.');
+});
+
+indexFolderData().then(function() {
+	display.print(Object.keys(VIDFOLDER_DATA).length + ' folder data files have been parsed');
 });
 
 
 /**
- * Search for files matching the given pattern
+ * Search for folder matching the given pattern
  * @returns {Array}
  */
-function search(sPattern, bDigest) {
-	console.log('searching', sPattern);
-	bDigest = bDigest || false;
-	sPattern = sPattern.replace(/[^a-z0-9]+/gi, '-');
+function search(sPattern) {
 	let r = new RegExp(sPattern, 'i');
-	if (bDigest) {
-		return AUTOCOMP_LIST.filter(function(v) {
-			return !!v.match(r);
-		});
-	} else {
-		return VIDFILES_LIST.filter(function(v) {
-			return !!v.file.match(r);
-		});
+	let aResults = [];
+	for (let f in VIDFOLDER_DATA) {
+		let d = VIDFOLDER_DATA[f];
+		if (('name' in d) && !!d.name.match(r)) {
+			aResults.push(d.name);
+		} else if (!!f.match(r)) {
+			aResults.push(f);
+		}
 	}
+	return aResults;
+}
+
+function fullSearch(sPattern) {
+	let aResult = search(sPattern).map(v => VIDFOLDER_DATA);
 }
 
 /**

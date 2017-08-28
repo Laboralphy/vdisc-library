@@ -5,7 +5,7 @@ createDisc() {
 	local sName="$1"
 	local nDisc="$2"
 	local i
-	mkdir "VIDFILES/$sName/d$nDisc"
+	mkdir -p "VIDFILES/$sName/d$nDisc"
 	for i in 10 11 12 13 14
 	do
 		touch "VIDFILES/$sName/d$nDisc/$sName.d$nDisc.t$i.vfr.qh.webm"
@@ -15,11 +15,15 @@ createDisc() {
 createShow() {
 	local sName="$1"
 	local i
-	mkdir "$sName"
+	mkdir -p "$sName"
 	for i in 1 2
 	do
 		createDisc "$sName" $i
 	done
 }
 
-createShow "$1"
+
+for x in $*
+do
+	createShow "$x"
+done

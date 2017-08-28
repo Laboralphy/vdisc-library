@@ -14,7 +14,7 @@
             'defMinChars'
         ],
         mounted: function() {
-			this.id = this._uid;
+			this.id = 'uid-' + this._uid;
         },
 		data: function() {
 			return {

@@ -59,6 +59,28 @@ async function cursedSearch(sPath, sSubPath) {
 	});
 }
 
+/**
+ * Simple Folder Search non recursive
+ * @param sPath
+ * @returns {Promise.<void>}
+ */
+async function directoryList(sPath) {
+	return new Promise(async function(resolve) {
+		let a = [];
+		let aDir = await readdir(sPath);
+		for (let i = 0, l = aDir.length; i < l; ++i) {
+			let sFile = aDir[i];
+			let sCompFile = path.join(sPath, sFile);
+			let oStat = await fstat(sCompFile);
+			if (oStat.isDirectory()) {
+				a.push(sFile);
+			}
+		}
+		resolve(a);
+	});
+}
+
 module.exports = {
-	search: cursedSearch
+	search: cursedSearch,
+	directoryList: directoryList
 };

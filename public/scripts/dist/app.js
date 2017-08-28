@@ -822,7 +822,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             'defMinChars'
         ],
         mounted: function() {
-			this.id = this._uid;
+			this.id = 'uid-' + this._uid;
         },
 		data: function() {
 			return {
@@ -855,6 +855,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
 
 			goSuggest: function() {
+			    console.log('suggest', this.search);
 				if (this.search.length >= this.minChars) {
 					if (this.onSuggest) {
 						this.onSuggest(this.search);
@@ -1411,33 +1412,68 @@ function main () {
 		},
 		methods: {
 
-        	mainMenuClick: function(item) {
+			////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS //////
+			////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS //////
+			////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS ////// EVENTS //////
+
+			/**
+			 * When one clicks on a main menu option
+			 * @param item
+			 */
+			mainMenuClick: function(item) {
 				console.log('clicked on xxx', item.id);
 			},
 
+			/**
+			 * When a suggestion is made from the search form
+			 * @param req
+			 */
+			searchFormSuggest: function(req) {
+				axios
+					.get('/search/p/' + req.replace(/[^a-z0-9]+/gi, '-'))
+					.then(res => {
+						this.assignArray(this.$refs.searchForm.list, res.data);
+					});
+			},
+
+			searchFormSearch: function(req) {
+				axios.get('/search/s/' + req.replace(/[^a-z0-9]+/gi, '-')).then(res => {
+					let $vb = this.$refs.videoBrowser;
+					$vb.title = 'Résultats pour : ' + req;
+					this.assignArray($vb.items, res.data.map(v => {
+						return {
+							id: v.id,
+							caption: v.file.split('.').slice(0, 3).join(' '),
+							source: '/thumbnails/default.jpg'
+						};
+					}));
+				});
+			},
+
+
+
+
+
+
+
+
+			/**
+			 * Assigns an array to a Component array, according to Vue array manipulation restrictions
+			 * @param aArray {Array} component array
+			 * @param aData {Array} array
+			 */
+			assignArray: function(aArray, aData) {
+				aArray.splice(0, aArray.length);
+				aData.forEach(x => aArray.push(x));
+			},
+
         	init: function() {
+				let self = this;
         		let $refs = this.$refs;
 
         		$refs.mainMenu.onClick = this.mainMenuClick.bind(this);
-
-				$refs.searchForm.onSuggest = function(req) {
-					axios.get('/search/p/' + req.replace(/[^a-z0-9]+/gi, '-'))
-						.then(data => this.$set($refs.searchForm.list, data));
-				};
-
-				$refs.searchForm.onSearch = function(req) {
-					axios.get('/search/s/' + req.replace(/[^a-z0-9]+/gi, '-')).then(res => {
-						let $vb = $refs.videoBrowser;
-						$vb.title = 'Résultats pour : ' + req;
-						this.$set($vb.items, res.data.map(v => {
-							return {
-								id: v.id,
-								caption: v.file.split('.').slice(0, 3).join(' '),
-								source: '/thumbnails/default.jpg'
-							};
-						}));
-					});
-				};
+				$refs.searchForm.onSuggest = this.searchFormSuggest.bind(this);
+				$refs.searchForm.onSearch = this.searchFormSearch.bind(this);
 
 				$refs.videoBrowser.onSelect = function(item) {
 					console.log('MAIN click on', item);
