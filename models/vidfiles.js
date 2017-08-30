@@ -15,10 +15,14 @@ let VIDFILES_INDEX = null;
 let VIDFOLDER_DATA = null;
 
 
-
-async function indexVidFiles() {
+/**
+ * Défines and indexes a liste of video files
+ * @param vfl list of video files
+ *
+ */
+function setVidFiles(vfl) {
 	let aFileIndex = {};
-	let aFileList = await cfl.search(VIDFILES_PATH);
+	let aFileList = Object.assign({}, vfl);
 	// complete with identifier
 	aFileList.forEach(function(v, i) {
 		v.id = (i + 1).toString(36);
@@ -32,9 +36,14 @@ async function indexVidFiles() {
 	AUTOCOMP_LIST = aAutoCompList;
 }
 
+
+
+async function indexVidFiles() {
+	setVidFiles(await cfl.search(VIDFILES_PATH));
+}
+
 async function loadFolderData(sPath) {
 	return new Promise(function(resolve) {
-		let id = 0;
 		let sFile = path.join(VIDFILES_PATH, sPath, INDEX_FILENAME);
 		fs.stat(sFile, function(err, stat) {
 			if (stat) {
@@ -67,14 +76,17 @@ async function indexFolderData() {
 	VIDFOLDER_DATA = oData;
 }
 
-indexVidFiles().then(function() {
-	display.print(AUTOCOMP_LIST.length + ' folders have been indexed.');
-	display.print(VIDFILES_LIST.length + ' files have been indexed.');
-});
 
-indexFolderData().then(function() {
-	display.print(Object.keys(VIDFOLDER_DATA).length + ' folder data files have been parsed');
-});
+function init() {
+	indexVidFiles().then(function () {
+		display.print(AUTOCOMP_LIST.length + ' folders have been indexed.');
+		display.print(VIDFILES_LIST.length + ' files have been indexed.');
+	});
+
+	indexFolderData().then(function () {
+		display.print(Object.keys(VIDFOLDER_DATA).length + ' folder data files have been parsed');
+	});
+}
 
 
 /**
@@ -127,6 +139,7 @@ function getById(id) {
 }
 
 module.exports = {
+	init,
 	search,
 	getFullName,
 	getById

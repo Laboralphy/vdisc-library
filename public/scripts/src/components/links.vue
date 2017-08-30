@@ -33,16 +33,12 @@
 						oOutput.id = 'id-' + id;
                     }
 					return oOutput;
-                }),
-
-                onClick: null
+                })
 			};
 		},
         methods: {
 			clickHandler: function(item) {
-                if (this.onClick) {
-					this.onClick(item);
-                }
+				this.$emit('select', item);
             }
         },
         components: {

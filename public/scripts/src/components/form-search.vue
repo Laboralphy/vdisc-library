@@ -23,17 +23,15 @@
                 delay: this.defDelay || 500,
                 minChars: this.defMinChars || 3,
                 _hTimeOut: 0,
-                id: -1,
-
-                onSuggest: null,
-                onSearch: null,
+                id: -1
 			};
 		},
         methods: {
 			inputHandler: function(oEvent) {
 				if (this._hTimeOut) {
 					clearTimeout(this._hTimeOut);
-                }
+					this._hTimeOut = null;
+				}
 				this._hTimeOut = setTimeout(this.goSuggest.bind(this), this.delay);
             },
 
@@ -47,18 +45,13 @@
             },
 
 			goSuggest: function() {
-			    console.log('suggest', this.search);
 				if (this.search.length >= this.minChars) {
-					if (this.onSuggest) {
-						this.onSuggest(this.search);
-                    }
+					this.$emit('suggest', this.search);
 				}
 			},
 
             goSearch: function() {
-                if (this.onSearch) {
-                    this.onSearch(this.search);
-                }
+				this.$emit('search', this.search);
             }
         }
 	}

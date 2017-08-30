@@ -4,13 +4,13 @@
 
 //import Vue from './externals/Vue/vue.js';
 
-import vueTitle from './Components/title.vue';
-import vueIcon from './Components/icon.vue';
-import vueLinks from './Components/links.vue';
-import vueThumbnailItem from './Components/thumbnail-item.vue';
-import vueThumbnailList from './Components/thumbnail-list.vue';
-import vueCard from './Components/card.vue';
-import vueFormSearch from './Components/form-search.vue';
+import vueTitle from './components/title.vue';
+import vueIcon from './components/icon.vue';
+import vueLinks from './components/links.vue';
+import vueThumbnailItem from './components/thumbnail-item.vue';
+import vueThumbnailList from './components/thumbnail-list.vue';
+import vueCard from './components/card.vue';
+import vueFormSearch from './components/form-search.vue';
 
 function main () {
 
@@ -44,14 +44,16 @@ function main () {
 			 * @param req
 			 */
 			searchFormSuggest: function(req) {
-				axios
+
+				/*axios
 					.get('/search/p/' + req.replace(/[^a-z0-9]+/gi, '-'))
 					.then(res => {
 						this.assignArray(this.$refs.searchForm.list, res.data);
-					});
+					});*/
 			},
 
 			searchFormSearch: function(req) {
+				/*
 				axios.get('/search/s/' + req.replace(/[^a-z0-9]+/gi, '-')).then(res => {
 					let $vb = this.$refs.videoBrowser;
 					$vb.title = 'Résultats pour : ' + req;
@@ -62,7 +64,7 @@ function main () {
 							source: '/thumbnails/default.jpg'
 						};
 					}));
-				});
+				});*/
 			},
 
 
@@ -83,16 +85,14 @@ function main () {
 			},
 
         	init: function() {
-				let self = this;
         		let $refs = this.$refs;
 
-        		$refs.mainMenu.onClick = this.mainMenuClick.bind(this);
-				$refs.searchForm.onSuggest = this.searchFormSuggest.bind(this);
-				$refs.searchForm.onSearch = this.searchFormSearch.bind(this);
-
-				$refs.videoBrowser.onSelect = function(item) {
+        		$refs.mainMenu.$on('select', this.mainMenuClick.bind(this));
+				$refs.searchForm.$on('suggest', this.searchFormSuggest.bind(this));
+				$refs.searchForm.$on('search', this.searchFormSearch.bind(this));
+				$refs.videoBrowser.$on('select', function(item) {
 					console.log('MAIN click on', item);
-				};
+				});
 			}
 		}
     });

@@ -1,7 +1,7 @@
 /**
  * Created by ralphy on 24/08/17.
  */
-const vr = require('../models/video-repository');
+const vr = require('../models/vidfiles');
 
 module.exports = {
 	preview: function(req, res) {

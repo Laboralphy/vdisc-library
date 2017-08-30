@@ -23,15 +23,12 @@
 		data: function() {
 			return {
 				title: this.defTitle,
-				items: [],
-                onSelect: null,
+				items: []
 			};
 		},
         methods: {
 			selectHandler: function(item) {
-                if (this.onSelect) {
-                	this.onSelect(item.id);
-                }
+				this.$emit('select', item);
             }
         }
 	}
