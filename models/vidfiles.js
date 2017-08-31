@@ -10,19 +10,25 @@ const VIDFILES_PATH = path.join(__dirname, '../', CONFIG.paths.videos);
 const INDEX_FILENAME = 'index.json';
 
 let VIDFILES_LIST = null;
-let AUTOCOMP_LIST = null;
 let VIDFILES_INDEX = null;
 let VIDFOLDER_DATA = null;
+let AUTOCOMP_LIST = null;
 
+function clear() {
+	VIDFILES_LIST = null;
+	AUTOCOMP_LIST = null;
+	VIDFILES_INDEX = null;
+	VIDFOLDER_DATA = null;
+}
 
 /**
- * Défines and indexes a liste of video files
+ * Défines and indexes a list of video files
  * @param vfl list of video files
  *
  */
 function setVidFiles(vfl) {
 	let aFileIndex = {};
-	let aFileList = Object.assign({}, vfl);
+	let aFileList = vfl.slice(0);
 	// complete with identifier
 	aFileList.forEach(function(v, i) {
 		v.id = (i + 1).toString(36);
@@ -36,8 +42,10 @@ function setVidFiles(vfl) {
 	AUTOCOMP_LIST = aAutoCompList;
 }
 
-
-
+/**
+ * indexes all files present in the VIDFILES sub-directory
+ * @returns {Promise.<void>}
+ */
 async function indexVidFiles() {
 	setVidFiles(await cfl.search(VIDFILES_PATH));
 }
@@ -142,5 +150,8 @@ module.exports = {
 	init,
 	search,
 	getFullName,
-	getById
+	getById,
+	setVidFiles,
+	getVidFiles: () => VIDFILES_LIST,
+	clear
 };

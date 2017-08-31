@@ -85,8 +85,7 @@ function main () {
 			},
 
         	init: function() {
-        		let $refs = this.$refs;
-
+				let $refs = this.$refs;
         		$refs.mainMenu.$on('select', this.mainMenuClick.bind(this));
 				$refs.searchForm.$on('suggest', this.searchFormSuggest.bind(this));
 				$refs.searchForm.$on('search', this.searchFormSearch.bind(this));
