@@ -1013,6 +1013,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         methods: {
 			selectHandler: function(item) {
 				this.$emit('select', item);
+            },
+
+            addItem: function(id, sCaption, sSource) {
+                this.items.push({
+                    id: id,
+                    caption: sCaption,
+                    source: sSource
+                })
             }
         }
 	});
