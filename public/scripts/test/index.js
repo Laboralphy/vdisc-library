@@ -15,11 +15,6 @@ describe('#search-tool', function() {
 			expect(searchTool.levenshtein('string', 'stringa')).toBe(1);
 		});
 	});
-	describe('#digest', function() {
-		it('should return "alpha beta delta gamma"', function() {
-			expect(searchTool.digest('DELta Gamma Alpha Beta')).toBe('alpha beta delta gamma');
-		});
-	});
 });
 
 describe('#mutations', function() {
@@ -80,17 +75,21 @@ describe('#mutations', function() {
 			expect(state.videos.length).toBe(40);
 		});
 		it('should show videos of haruhi first', function() {
-			let aResults = mutations.searchVideos(state, 'haruhi');
-			let sDigHaruhi = searchTool.digest('La mélancolie d\'Haruhi Suzumiya');
-			let sDigCodeGeass = searchTool.digest('Code Geass - Lelouch of the Rebellion');
-			let sDigDeathNote = searchTool.digest('Death Note');
-			let s12Royaumes = searchTool.digest('Les 12 royaumes');
-			let sSearch = searchTool.digest('haruhi');
-			console.log(sDigHaruhi, sSearch, searchTool.levenshtein(sDigHaruhi, sSearch));
-			console.log(sDigDeathNote, sSearch, searchTool.levenshtein(sDigDeathNote, sSearch));
-			console.log(sDigCodeGeass, sSearch, searchTool.levenshtein(sDigCodeGeass, sSearch));
-			console.log(s12Royaumes, sSearch, searchTool.levenshtein(s12Royaumes, sSearch));
-			expect(aResults[0].idshow).toBe(4);
-		})
+            let aResults = mutations.searchVideos(state, 'haruhi');
+            expect(aResults[0].idshow).toBe(3);
+
+            aResults = mutations.searchVideos(state, 'haruhi suzumiya');
+			expect(aResults[0].idshow).toBe(3);
+        });
+
+        it('should show videos of code geass first', function() {
+            let aResults = mutations.searchVideos(state, 'lelouch');
+            expect(aResults[0].idshow).toBe(1);
+        });
+
+        it('should show videos of death note first', function() {
+            let aResults = mutations.searchVideos(state, 'death');
+            expect(aResults[0].idshow).toBe(2);
+        });
 	});
 });

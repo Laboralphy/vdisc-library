@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/jasmine public/scripts/dist/test.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "webpack": "node_modules/.bin/webpack --watch"
   },
   "author": "Raphaël Marandet",
   "license": "ISC",

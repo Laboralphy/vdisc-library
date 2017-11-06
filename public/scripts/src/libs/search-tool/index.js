@@ -49,29 +49,51 @@ function levenshtein(a, b) {
 	return matrix[b.length][a.length];
 }
 
-/**
- * Transforme un chaine en chaine préparée pour la recherche
- * @param s
- * @returns {string}
- */
-function digest(s) {
-	return s
-		.split(' ')
-		.filter(s => s !== '')
-		.map(x => x.toLowerCase())
-		.sort((x, y) => {
-			if (x > y) {
-				return 1;
-			} else if (x < y) {
-				return -1
-			} else {
-				return 0;
-			}
-		})
-		.join(' ');
+function removeDiacritics(sString) {
+	return sString
+		.normalize('NFD')
+		.replace(/[\u0300-\u036F]/g, '');
 }
+
+function removeNonAlphanum(sString) {
+	return sString
+		.replace(/[\u0021-\u0029\u003A-\u0040\u005B-\u0060\u007B-\u007E]/g, ' ');
+}
+
+function simplifyString(sString) {
+	return removeNonAlphanum(removeDiacritics(sString));
+}
+
+/**
+ * Calcule la ressemblence entre 2 chaines.
+ * Le calcul se fait mot à mot
+ * @param sText {string}
+ * @param sSearch {string}
+ */
+function pertinence(sText, sSearch) {
+
+    function simplifyAndFilter(s) {
+        return simplifyString(s)
+            .toLowerCase()
+            .split(' ')
+            .filter(s => s !== '');
+    }
+
+    // chaque mot de aSearch doit être recherché dans aText
+    let aSimplifiedText = simplifyAndFilter(sText);
+    return simplifyAndFilter(sSearch)
+        .map(wSearch => aSimplifiedText
+            .map(wText => levenshtein(wText, wSearch))
+            .reduce((prev, n) => Math.min(prev, n), Infinity)
+        )
+        .sort()
+        .join('-');
+}
+
+
 
 export default {
 	levenshtein,
-	digest
+	pertinence,
+	simplifyString
 };

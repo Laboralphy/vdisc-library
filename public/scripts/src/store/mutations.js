@@ -33,7 +33,7 @@ export default {
 			idshow,
 			season,
 			episode,
-			search: searchTool.digest(oShow.name + ' ' + season + ' ' + episode + ' ' + title),
+			search: oShow.name + ' s' + season + ' e' + episode + ' ' + title,
 			title
 		};
 		// vérifier si l'identifiant existe déja
@@ -59,10 +59,23 @@ export default {
 	 * @returns {Array.<T>}
 	 */
 	searchVideos(state, sSearch) {
-		let sDig = searchTool.digest(sSearch);
+		function cmp(s1, s2) {
+			if (s1 < s2) {
+				return -1;
+			} else if (s2 > s1) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
 		return state
 			.videos
 			.slice(0)
-			.sort((v1, v2) => searchTool.levenshtein(v1.search, sDig) - searchTool.levenshtein(v2.search, sDig));
+			.sort((v1, v2) =>
+				cmp(
+					searchTool.pertinence(v1.search, sSearch),
+					searchTool.pertinence(v2.search, sSearch)
+				)
+			);
 	}
 };
