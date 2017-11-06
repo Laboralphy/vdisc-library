@@ -12,6 +12,10 @@ import vueThumbnailList from './components/thumbnail-list.vue';
 import vueCard from './components/card.vue';
 import vueFormSearch from './components/form-search.vue';
 
+
+// store
+import store from './store/index.js';
+
 function main () {
 
     const app = new Vue({
