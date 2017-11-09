@@ -74,20 +74,6 @@ function main () {
 
 
 
-
-
-
-
-			/**
-			 * Assigns an array to a Component array, according to Vue array manipulation restrictions
-			 * @param aArray {Array} component array
-			 * @param aData {Array} array
-			 */
-			assignArray: function(aArray, aData) {
-				aArray.splice(0, aArray.length);
-				aData.forEach(x => aArray.push(x));
-			},
-
         	init: function() {
 				let $refs = this.$refs;
         		$refs.mainMenu.$on('select', this.mainMenuClick.bind(this));

@@ -78,4 +78,13 @@ export default {
 				)
 			);
 	}
+
+    /**
+	 * Affiche une liste de videos / efface les précédente video déja affichée
+     * @param state
+     * @param aList
+     */
+	displayVideo(state, aList) {
+		
+	}
 };

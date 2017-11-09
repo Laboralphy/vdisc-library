@@ -6,6 +6,6 @@ module.exports = {
     port: 6616,
     paths: {
         videos: 'VIDFILES',
-        thumbnails: 'IMGFILES'
+        thumbnails: 'IMGFILES/thumbnails'
     }
 };

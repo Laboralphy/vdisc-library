@@ -1,7 +1,7 @@
 <template>
     <figure v-on:click="clickHandler" class="thumbnail">
         <img v-bind:src="source" />
-        <figcaption>{{ caption }}</figcaption>
+        <figcaption><p>{{ caption }}</p></figcaption>
     </figure>
 </template>
 <script>
@@ -23,7 +23,8 @@
 </script>
 <style scoped="scoped">
     figure.thumbnail img {
-        width: 10em;
+        max-height: 14em;
+        max-width: 10em;
     }
 
     figure.thumbnail figcaption {
@@ -42,5 +43,9 @@
     figure:hover {
         transition: filter 0.5s;
         filter: brightness(115%);
+    }
+
+    figure figcaption {
+        height: 4em;
     }
 </style>
