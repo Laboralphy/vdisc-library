@@ -3,6 +3,7 @@
  */
 
 export default {
+	displayedShows: [],
 	displayedVideos: [],
 	videos: [],
 	shows: []

@@ -46,28 +46,24 @@ describe('#mutations', function() {
 				id: ++id,
 				filename: 'CG-s1e0' + iEp + '.mkv',
 				idshow: 1,
-				season: 1,
 				episode: iEp,
 			});
 			mutations.addVideo(state, {
 				id: ++id,
 				filename: 'DN-e0' + iEp + '.mkv',
 				idshow: 2,
-				season: 1,
 				episode: iEp,
 			});
 			mutations.addVideo(state, {
 				id: ++id,
 				filename: 'Haruhi-e0' + iEp + '.mkv',
 				idshow: 3,
-				season: 1,
 				episode: iEp,
 			});
 			mutations.addVideo(state, {
 				id: ++id,
 				filename: 'K12-e0' + iEp + '.mkv',
 				idshow: 4,
-				season: 1,
 				episode: iEp,
 			});
 		}
@@ -75,20 +71,20 @@ describe('#mutations', function() {
 			expect(state.videos.length).toBe(40);
 		});
 		it('should show videos of haruhi first', function() {
-            let aResults = mutations.searchVideos(state, 'haruhi');
+            let aResults = mutations.searchShows(state, 'haruhi');
             expect(aResults[0].idshow).toBe(3);
 
-            aResults = mutations.searchVideos(state, 'haruhi suzumiya');
+            aResults = mutations.searchShows(state, 'haruhi suzumiya');
 			expect(aResults[0].idshow).toBe(3);
         });
 
         it('should show videos of code geass first', function() {
-            let aResults = mutations.searchVideos(state, 'lelouch');
+            let aResults = mutations.searchShows(state, 'lelouch');
             expect(aResults[0].idshow).toBe(1);
         });
 
         it('should show videos of death note first', function() {
-            let aResults = mutations.searchVideos(state, 'death');
+            let aResults = mutations.searchShows(state, 'death');
             expect(aResults[0].idshow).toBe(2);
         });
 	});

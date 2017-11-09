@@ -3,6 +3,7 @@
  */
 
 import searchTool from '../libs/search-tool/index.js';
+import * as types from './mutation-types';
 
 export default {
 	/**
@@ -15,50 +16,52 @@ export default {
 	 * @param episode {number} numero de l'épisode
 	 * @param title {string} titre de l'épisode
 	 */
-	addVideo(state, {
+	[types.ADD_VIDEO] (state, {
 		id,
 		filename,
 		idshow,
-		season = 1,
-		episode,
-		title = ''
+		episode
 	}) {
 		let oShow = state.shows.find(s => s.id === idshow);
 		if (!oShow) {
 			throw new Error('could add video to show #' + idshow + ' because this show does not exist.');
 		}
-		let oVideo = {
-			id,
-			filename,
-			idshow,
-			season,
-			episode,
-			search: oShow.name + ' s' + season + ' e' + episode + ' ' + title,
-			title
-		};
 		// vérifier si l'identifiant existe déja
-		if (state.videos.every(v => v.id !== id)) {
-			state.videos.push(oVideo);
+		if (!state.videos.find(v => v.id === id)) {
+			state.videos.push({
+				id,
+				filename,
+				idshow,
+				episode
+			});
 		}
 	},
 
 	/**
-	 * Renvoie les données relatives à une video
+	 * Ajout un show à la base de données.
 	 * @param state
-	 * @param id {number} identifiant video recherchée
-	 * @returns {*}
+	 * @param id
+	 * @param name
 	 */
-	getVideo(state, id) {
-		return state.videos.find(v => v.id === id);
+	[types.ADD_SHOW] (state, {
+		id,
+		name
+	}) {
+		if (!state.shows.find(s => s.id === id)) {
+			state.shows.push({
+				id,
+				name
+			});
+		}
 	},
 
 	/**
-	 * Renvoie les video coorespondant au mieux à la chaine recherchée
+	 * Affiche les video correspondant au mieux à la chaine recherchée
 	 * @param state
 	 * @param sSearch
 	 * @returns {Array.<T>}
 	 */
-	searchVideos(state, sSearch) {
+	searchShows(state, sSearch) {
 		function cmp(s1, s2) {
 			if (s1 < s2) {
 				return -1;
@@ -68,23 +71,14 @@ export default {
 				return 0;
 			}
 		}
-		return state
-			.videos
+		state.displayedShows = state
+			.shows
 			.slice(0)
 			.sort((v1, v2) =>
 				cmp(
-					searchTool.pertinence(v1.search, sSearch),
-					searchTool.pertinence(v2.search, sSearch)
+					searchTool.pertinence(v1.name, sSearch),
+					searchTool.pertinence(v2.name, sSearch)
 				)
 			);
-	}
-
-    /**
-	 * Affiche une liste de videos / efface les précédente video déja affichée
-     * @param state
-     * @param aList
-     */
-	displayVideo(state, aList) {
-		
-	}
+	},
 };
