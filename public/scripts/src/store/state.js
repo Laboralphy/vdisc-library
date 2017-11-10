@@ -6,5 +6,6 @@ export default {
 	displayedShows: [],
 	displayedVideos: [],
 	videos: [],
-	shows: []
+	shows: [],
+	searchResults: []
 }

@@ -81,13 +81,14 @@ function pertinence(sText, sSearch) {
 
     // chaque mot de aSearch doit être recherché dans aText
     let aSimplifiedText = simplifyAndFilter(sText);
-    return simplifyAndFilter(sSearch)
+    let pert = simplifyAndFilter(sSearch)
         .map(wSearch => aSimplifiedText
             .map(wText => levenshtein(wText, wSearch))
             .reduce((prev, n) => Math.min(prev, n), Infinity)
         )
         .sort()
         .join('-');
+    return pert;
 }
 
 

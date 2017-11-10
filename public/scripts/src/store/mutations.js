@@ -65,13 +65,17 @@ export default {
 		function cmp(s1, s2) {
 			if (s1 < s2) {
 				return -1;
-			} else if (s2 > s1) {
+			} else if (s1 > s2) {
 				return 1;
 			} else {
 				return 0;
 			}
 		}
-		state.displayedShows = state
+
+		state
+			.shows.forEach(s => s.pert = searchTool.pertinence(s.name, sSearch));
+
+		state.searchResults = state
 			.shows
 			.slice(0)
 			.sort((v1, v2) =>
