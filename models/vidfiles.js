@@ -31,8 +31,10 @@ function setVidFiles(vfl) {
 	let aFileList = vfl.slice(0);
 	// complete with identifier
 	aFileList.forEach(function(v, i) {
-		v.id = (i + 1).toString(36);
-		aFileIndex[v.id] = v;
+		if (v !== VIDFILES_INDEX) {
+            v.id = (i + 1).toString(36);
+            aFileIndex[v.id] = v;
+        }
 	});
 	let aAutoCompList = aFileList
 		.map(v => v.file.split('.').shift().replace(/[^0-9a-z]+/gi, '-'))
@@ -72,6 +74,7 @@ async function loadFolderData(sPath) {
 async function indexFolderData() {
 	let aFolderList = await cfl.directoryList(VIDFILES_PATH);
 	let oData = {};
+    let idVideo = 0;
 	for (let i = 0, l = aFolderList.length; i < l; ++i) {
 		let f = aFolderList[i];
 		let d = await loadFolderData(f);
@@ -79,6 +82,18 @@ async function indexFolderData() {
 			d.name = f;
 		}
 		d.id = (i + 1).toString(36);
+		d.path = f;
+        let aFiles = await cfl.search(path.join(VIDFILES_PATH, f));
+        d.videos = aFiles
+			.filter(v => v.file !== INDEX_FILENAME)
+			.map(function(v) {
+                ++idVideo;
+				return {
+                    file: v.file,
+                    path: v.path,
+					id: idVideo.toString(36)
+				};
+			});
 		oData[f] = d;
 	}
 	VIDFOLDER_DATA = oData;
@@ -153,5 +168,6 @@ module.exports = {
 	getById,
 	setVidFiles,
 	getVidFiles: () => VIDFILES_LIST,
+	getShowList: () => VIDFOLDER_DATA,
 	clear
 };

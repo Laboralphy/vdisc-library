@@ -14,7 +14,6 @@ export default {
 	 * @param idshow {number} identifiant du show
 	 * @param season {number} numero de saison
 	 * @param episode {number} numero de l'épisode
-	 * @param title {string} titre de l'épisode
 	 */
 	[types.ADD_VIDEO] (state, {
 		id,
@@ -55,11 +54,31 @@ export default {
 		}
 	},
 
+	[types.FEED_STORE] (state, data) {
+		for (let sShow in data) {
+			if (data.hasOwnProperty(sShow)) {
+                let oShow = data[sShow];
+                let id = oShow.id;
+                let name = oShow.name;
+                state.shows.push({
+                    id,
+                    name
+                });
+                oShow.videos.forEach((oVideo, iVideo) => {
+                    state.videos.push({
+                        id: oVideo.id,
+                        idshow: id,
+                        episode: iVideo + 1
+                    });
+				});
+			}
+		}
+	},
+
 	/**
 	 * Affiche les video correspondant au mieux à la chaine recherchée
 	 * @param state
 	 * @param sSearch
-	 * @returns {Array.<T>}
 	 */
 	searchShows(state, sSearch) {
 		function cmp(s1, s2) {
@@ -72,9 +91,6 @@ export default {
 			}
 		}
 
-		state
-			.shows.forEach(s => s.pert = searchTool.pertinence(s.name, sSearch));
-
 		state.searchResults = state
 			.shows
 			.slice(0)
@@ -84,5 +100,10 @@ export default {
 					searchTool.pertinence(v2.name, sSearch)
 				)
 			);
+        console.log('found shows : ',state.searchResults );
 	},
+
+	[types.SUGGEST_SEARCH] (state, aList) {
+		state.suggestedSearch = aList;
+	}
 };

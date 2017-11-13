@@ -12,6 +12,8 @@ import vueThumbnailList from './components/thumbnail-list.vue';
 import vueCard from './components/card.vue';
 import vueFormSearch from './components/form-search.vue';
 
+// types
+import * as types from './store/mutation-types';
 
 // store
 import store from './store/index.js';
@@ -48,7 +50,10 @@ function main () {
 			 * @param req
 			 */
 			searchFormSuggest: function(req) {
-
+				store.dispatch(types.SEARCH_SHOWS, req).then(() =>
+					store.dispatch()
+					console.log('dispatch then', store.state.searchResults.map(s => s.name))
+				);
 				/*axios
 					.get('/search/p/' + req.replace(/[^a-z0-9]+/gi, '-'))
 					.then(res => {
@@ -76,10 +81,11 @@ function main () {
 
         	init: function() {
 				let $refs = this.$refs;
+				axios.get('/show/list').then(res => store.dispatch(types.FEED_STORE, res.data));
         		$refs.mainMenu.$on('select', this.mainMenuClick.bind(this));
 				$refs.searchForm.$on('suggest', this.searchFormSuggest.bind(this));
 				$refs.searchForm.$on('search', this.searchFormSearch.bind(this));
-				$refs.videoBrowser.$on('select', function(item) {
+				$refs.showBrowser.$on('select', function(item) {
 					console.log('MAIN click on', item);
 				});
 			}

@@ -11,6 +11,10 @@ display.print('--------------------');
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+const vr = require('./models/vidfiles');
+vr.init();
+
+
 // SEARCH
 const ctlSearch = require('./controllers/search');
 
@@ -22,6 +26,14 @@ app.get('/search/s/:pattern([-!\' +0-9A-Za-z]+)', ctlSearch.search);
 
 // get info
 app.get('/stat/:id([0-9a-z]+)', ctlSearch.stat);
+
+
+
+// SHOW
+const ctlShow = require('./controllers/show');
+
+// get list
+app.get('/show/list', ctlShow.list);
 
 
 // THUMBNAILS
